@@ -54,23 +54,120 @@
       .login-link:hover {
         text-decoration: underline;
       }
+      .virtual-keyboard {
+        display: none;
+        margin-top: 10px;
+        background-color: #eee;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+        max-width: 320px;
+      }
+      .virtual-keyboard button {
+        padding: 10px;
+        margin: 2px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        cursor: pointer;
+        border-radius: 4px;
+        width: 30px;
+      }
+      .virtual-keyboard button:hover {
+        background-color: #ddd;
+      }
+      .virtual-keyboard .special-button {
+        background-color: #007bff;
+        color: white;
+        width: 70px;
+      }
+      .virtual-keyboard .special-button:hover {
+        background-color: #0056b3;
+      }
     </style>
   </head>
   <body>
     <div class="signup-container">
       <h2>Sign Up</h2>
-      <form action="/signup" method="POST">
-        <input type="text" name="username" placeholder="Username" required />
-        <input type="email" name="email" placeholder="Email" required />
+      <form action="/signup" method="POST" autocomplete="off">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Username"
+          required
+          autocomplete="off"
+          readonly
+          onfocus="this.removeAttribute('readonly');"
+        />
+        <div id="keyboard" class="virtual-keyboard"></div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+          autocomplete="off"
+        />
         <input
           type="password"
           name="password"
           placeholder="Password"
           required
+          autocomplete="off"
         />
         <button type="submit">Sign Up</button>
       </form>
-      <a class="login-link" href="login.html">Already a member? Log in here</a>
+      <a class="login-link" href="/login">Already a member? Log in here</a>
     </div>
+
+    <script>
+      const keyboard = document.getElementById("keyboard");
+      const usernameInput = document.getElementById("username");
+      let keys =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".split(
+          ""
+        );
+
+      usernameInput.addEventListener("focus", () => {
+        keyboard.style.display = "block";
+        generateKeyboard();
+      });
+
+      function generateKeyboard() {
+        keyboard.innerHTML = "";
+        keys = keys.sort(() => Math.random() - 0.5); // Randomly shuffle the key arrangement
+        keys.forEach((key) => {
+          const button = document.createElement("button");
+          button.textContent = key;
+          button.addEventListener("click", () => {
+            usernameInput.value += key;
+            generateKeyboard(); // Regenerate with new key arrangement
+          });
+          keyboard.appendChild(button);
+        });
+
+        // Add "Done" Button
+        const doneButton = document.createElement("button");
+        doneButton.textContent = "Done";
+        doneButton.classList.add("special-button");
+        doneButton.addEventListener("click", () => {
+          keyboard.style.display = "none";
+        });
+        keyboard.appendChild(doneButton);
+
+        // Add "Cancle" Button
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Cancle";
+        deleteButton.classList.add("special-button");
+        deleteButton.addEventListener("click", () => {
+          usernameInput.value = usernameInput.value.slice(0, -1);
+        });
+        keyboard.appendChild(deleteButton);
+      }
+
+      // Prevent actual keyboard input
+      usernameInput.addEventListener("keydown", (e) => {
+        e.preventDefault();
+      });
+    </script>
   </body>
 </html>
