@@ -26,7 +26,8 @@
       }
       .signup-container input[type="text"],
       .signup-container input[type="email"],
-      .signup-container input[type="password"] {
+      .signup-container input[type="password"],
+      .signup-container input[type="tel"] {
         width: 90%;
         padding: 10px;
         margin: 10px 0;
@@ -114,9 +115,24 @@
           required
           autocomplete="off"
         />
+        <div>
+          <label for="phone"
+            >Phone Number: <span id="phoneNumber">5551234</span></label
+          >
+          <input
+            type="range"
+            id="phone"
+            name="phone"
+            min="0"
+            max="99999999"
+            value="5551234"
+            oninput="updatePhoneNumber(this.value)"
+            required
+          />
+        </div>
         <button type="submit">Sign Up</button>
       </form>
-      <a class="login-link" href="/login">Already a member? Log in here</a>
+      <a class="login-link" href="login.html">Already a member? Log in here</a>
     </div>
 
     <script>
@@ -168,6 +184,11 @@
       usernameInput.addEventListener("keydown", (e) => {
         e.preventDefault();
       });
+
+      // Update phone number display
+      function updatePhoneNumber(value) {
+        document.getElementById("phoneNumber").textContent = value;
+      }
     </script>
   </body>
 </html>
